@@ -16,6 +16,7 @@
   "scripts": {
     "check": "run-p test typecheck",
     "test": "vitest --run --silent=false",
+    "test-watch": "vitest --silent=false",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
