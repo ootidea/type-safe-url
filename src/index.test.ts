@@ -11,6 +11,7 @@ test('Path without parameters', () => {
   }
   const rootPath = createRootPath<PathSchema>()
 
+  expect(urlOf(rootPath)).toBe('/')
   expect(urlOf(rootPath.contact)).toBe('/contact')
   expect(urlOf(rootPath.about)).toBe('/about')
   expect(urlOf(rootPath.about.history)).toBe('/about/history')
@@ -49,4 +50,18 @@ test('Query parameters', () => {
   expect(urlOf(rootPath.blog, { order: 'asc' })).toBe('/blog?order=asc')
   expect(urlOf(rootPath.blog, { order: 'asc', page: 2 })).toBe('/blog?order=asc&page=2')
   expect(urlOf(rootPath.blog, { page: 2, order: 'asc' })).toBe('/blog?page=2&order=asc')
+})
+
+test('baseUrl', () => {
+  type PathSchema = {
+    contact: {}
+    about: {
+      history: {}
+      people: {}
+    }
+  }
+  const rootPath = createRootPath<PathSchema>({ baseUrl: 'https://example.com' })
+
+  expect(urlOf(rootPath)).toBe('https://example.com/')
+  expect(urlOf(rootPath.contact)).toBe('https://example.com/contact')
 })
