@@ -1,7 +1,17 @@
 import { MergeIntersection } from './utility'
 
+/**
+ * Symbol for specifying query parameter types in schema.
+ * @example
+ * type Schema = {
+ *   article: {
+ *     [queryParams]: { order?: 'asc' | 'desc'; page?: number }
+ *   }
+ * }
+ */
 export const queryParams = Symbol('queryParams')
 
+/** Symbol for the internal property */
 const segments = Symbol('segments')
 const options = Symbol('options')
 
@@ -9,6 +19,24 @@ export type Options = {
   baseUrl?: string
 }
 
+/**
+ * Create a root path object according to the given schema.
+ * @example without options
+ * const rootPath = createRootPath<{
+ *   contact: {}
+ *   blog: {
+ *     [id: number]: {}
+ *   }
+ * }>()
+ *
+ * @example with options
+ * const rootPath = createRootPath<{
+ *   contact: {}
+ *   blog: {
+ *     [id: number]: {}
+ *   }
+ * }>({ baseUrl: 'https://example.com' })
+ */
 export function createRootPath<PathSchema>(options: Options = {}): Path<PathSchema> {
   return createPath([], options)
 }

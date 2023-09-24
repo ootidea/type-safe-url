@@ -23,7 +23,7 @@ test('Path parameters', () => {
       [id: number]: {}
     }
     user: {
-      [id: string]: { posts: {} }
+      [name: string]: { posts: {} }
     }
   }
   const rootPath = createRootPath<PathSchema>()
