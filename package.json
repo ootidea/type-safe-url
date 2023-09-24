@@ -12,17 +12,33 @@
   },
   "license": "CC0-1.0",
   "author": "ootidea",
-  "main": "index.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
+    "build": "tsup",
     "check": "run-p test typecheck",
     "test": "vitest --run --silent=false",
     "test-watch": "vitest --silent=false",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "postversion": "git push && git push --tags && npm publish ./",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@tsconfig/strictest": "^2.0.2",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.0.3",
+    "tsup": "^7.2.0",
     "typescript": "^5.2.2",
     "vite": "^4.4.9",
     "vitest": "^0.34.5"
