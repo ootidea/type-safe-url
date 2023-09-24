@@ -46,7 +46,7 @@ test('Query parameters', () => {
   expect(urlOf(rootPath.login, { redirectUrl: 'https://example.com' })).toBe(
     '/login?redirectUrl=https%3A%2F%2Fexample.com',
   )
-  expect(urlOf(rootPath.blog, {})).toBe('/blog')
+  expect(urlOf(rootPath.blog)).toBe('/blog')
   expect(urlOf(rootPath.blog, { order: 'asc' })).toBe('/blog?order=asc')
   expect(urlOf(rootPath.blog, { order: 'asc', page: 2 })).toBe('/blog?order=asc&page=2')
   expect(urlOf(rootPath.blog, { page: 2, order: 'asc' })).toBe('/blog?page=2&order=asc')
