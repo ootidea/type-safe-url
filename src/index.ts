@@ -10,7 +10,7 @@ export function createRootPath<PathSchema>(): Path<PathSchema> {
 type Path<PathSchema> = string | number extends keyof PathSchema
   ? Path_<PathSchema> & { (pathParam: string | number): Path<PathSchema[string | number]> }
   : number extends keyof PathSchema
-  ? Path_<PathSchema> & { (pathParam__________: number): Path<PathSchema[number]> }
+  ? Path_<PathSchema> & { (pathParam: number): Path<PathSchema[number]> }
   : Path_<PathSchema>
 type Path_<T> = T extends object
   ? MergeIntersection<{ [K in keyof T]: K extends string ? Path<T[K]> : T[K] } & { [segments]: string[] }>
@@ -35,16 +35,17 @@ function createPath(path: string[]): any {
 
 // TODO: Record<keyof any, never>
 export function urlOf<T extends { [segments]: string[]; [queryParams]: Record<string, unknown> }>(
-  pathHolder: T,
+  path: T,
   givenQueryParams: Omit<T[typeof queryParams], symbol>,
 ): string
-export function urlOf<T extends { [segments]: string[]; [queryParams]?: never }>(pathHolder: T): string
+export function urlOf<T extends { [segments]: string[]; [queryParams]?: never }>(path: T): string
 export function urlOf<T extends { [segments]: string[]; [queryParams]: Record<string, unknown> }>(
-  pathHolder: T,
+  path: T,
   givenQueryParams?: Omit<T[typeof queryParams], symbol>,
 ): string {
+  const pathString = path[segments].map(encodeURI).join('/')
   if (givenQueryParams === undefined) {
-    return `/${pathHolder[segments].join('/')}`
+    return `/${pathString}`
   } else {
     const searchParams = new URLSearchParams()
     for (const [key, value] of Object.entries(givenQueryParams)) {
@@ -59,8 +60,8 @@ export function urlOf<T extends { [segments]: string[]; [queryParams]: Record<st
     const queryString = searchParams.toString()
     if (queryString === '') {
       // Generate '/user' instead of '/user?' for example'.
-      return `/${pathHolder[segments].join('/')}`
+      return `/${pathString}`
     }
-    return `/${pathHolder[segments].join('/')}?${queryString}`
+    return `/${pathString}?${queryString}`
   }
 }
