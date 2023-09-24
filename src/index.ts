@@ -16,9 +16,11 @@ type Path_<T> = T extends object
   ? MergeIntersection<{ [K in keyof T]: K extends string ? Path<T[K]> : T[K] } & { [segments]: string[] }>
   : T
 
-function createPath(path: string[]): any {
+function createPath(currentSegments: string[]): any {
   return new Proxy(
-    Object.assign((pathParam: unknown) => createPath([...path, String(pathParam)]), { [segments]: path }),
+    Object.assign((pathParam: unknown) => createPath([...currentSegments, String(pathParam)]), {
+      [segments]: currentSegments,
+    }),
     {
       get(target, key) {
         if (Reflect.has(target, key)) return Reflect.get(target, key)
@@ -27,7 +29,7 @@ function createPath(path: string[]): any {
           throw new Error(`Unknown symbol key: ${String(key)}`)
         }
 
-        return createPath([...path, key])
+        return createPath([...currentSegments, key])
       },
     },
   ) as any
