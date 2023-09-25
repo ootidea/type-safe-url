@@ -1,6 +1,6 @@
 <h1 align="center">type-safe-url</h1>
 
-A lightweight library for writing URLs in a type-safe manner.  
+A lightweight TypeScript library for writing URLs in a type-safe manner.  
 
 ## Features
 - Supports path parameters, query parameters, and even fragments (hash)
@@ -39,7 +39,7 @@ console.log(
 
 ## Setting the base URL
 
-By providing options to the `createRootPath` function, you can set the **base URL**.
+You can set the **base URL** by providing options to the `createRootPath` function.  
 
 ```ts
 const rootPath = createRootPath<{
