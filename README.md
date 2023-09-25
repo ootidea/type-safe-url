@@ -10,10 +10,12 @@ A lightweight library for writing URLs in a type-safe manner.
 
 ## Basic example
 
-```ts
-import { createRootPath, urlOf } from "type-safe-url";
+Here is an example of defining a schema and writing URLs.  
 
-// Define a path schema
+```ts
+import { createRootPath, urlOf, queryParams } from "type-safe-url";
+
+// Define a schema
 const rootPath = createRootPath<{
   setting: { account: {} }
   users: {
@@ -26,53 +28,26 @@ const rootPath = createRootPath<{
   }
 }>()
 
-console.log(urlOf(rootPath.setting.account)) // '/setting/account'
-console.log(urlOf(rootPath.users('alice'))) // '/users/alice'
-console.log(urlOf(rootPath.blog, { category: 'frontend' })) // '/blog?category=frontend'
+// Create URL strings
+console.log(
+  urlOf(rootPath.setting.account),                // '/setting/account'
+  urlOf(rootPath.users('alice')),                 // '/users/alice'
+  urlOf(rootPath.users),                          // '/users'
+  urlOf(rootPath.blog, { category: 'frontend' }), // '/blog?category=frontend'
+)
 ```
 
-<table>
-<tr><td>expression</td><td>value</td></tr>
-<tr><td>
+## Setting the base URL
 
-```typescript
-urlOf(rootPath.setting.account)
+By providing options to the `createRootPath` function, you can set the **base URL**.
+
+```ts
+const rootPath = createRootPath<{
+  about: {}
+}>({ baseUrl: 'https://example.com' })
+
+console.log(
+  urlOf(rootPath),       // 'https://example.com/'
+  urlOf(rootPath.about), // 'https://example.com/about'
+)
 ```
-</td><td>
-
-```typescript
-'/settings/account'
-```
-</td></tr>
-<tr><td>
-
-```typescript
-urlOf(rootPath.users('alice'))
-```
-</td><td>
-
-```typescript
-'/users/alice'
-```
-</td></tr>
-<tr><td>
-
-```typescript
-urlOf(rootPath.setting.account)
-```
-</td><td>
-
-```typescript
-'/settings/account'
-```
-</td></tr>
-<tr><td>
-
-`urlOf(rootPath.users('alice'))`
-</td><td>
-
-`'/users/alice'`
-
-</td></tr>
-
-</table>
