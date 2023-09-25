@@ -77,13 +77,13 @@ function createPath(currentSegments: string[], givenOptions: Options): any {
 export function urlOf<T extends { [segments]: string[]; [options]: Options; [queryParams]: Record<string, unknown> }>(
   // Make empty query parameters {} optional
   ...args: Partial<T[typeof queryParams]> extends T[typeof queryParams]
-    ? [path: T, givenQueryParams?: Omit<T[typeof queryParams], symbol>]
-    : [path: T, givenQueryParams: Omit<T[typeof queryParams], symbol>]
+    ? [path: T, givenQueryParams?: T[typeof queryParams]]
+    : [path: T, givenQueryParams: T[typeof queryParams]]
 ): string
 export function urlOf<T extends { [segments]: string[]; [options]: Options; [queryParams]?: never }>(path: T): string
 export function urlOf<T extends { [segments]: string[]; [options]: Options; [queryParams]: Record<string, unknown> }>(
   path: T,
-  givenQueryParams?: Omit<T[typeof queryParams], symbol>,
+  givenQueryParams?: T[typeof queryParams],
 ): string {
   const baseUrl = path[options]?.baseUrl ?? ''
   const pathString = path[segments].map(encodeURI).join('/')
