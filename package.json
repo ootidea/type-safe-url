@@ -1,7 +1,7 @@
 {
   "name": "type-safe-url",
   "version": "0.0.0",
-  "description": "",
+  "description": "A lightweight TypeScript library for writing URLs in a type-safe manner.",
   "homepage": "https://github.com/ootidea/type-safe-url#readme",
   "bugs": {
     "url": "https://github.com/ootidea/type-safe-url/issues"
