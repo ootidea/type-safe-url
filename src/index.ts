@@ -59,7 +59,7 @@ function createPath(currentSegments: string[], givenOptions: Options): any {
     }),
     {
       get(target, key) {
-        if (Reflect.has(target, key)) return Reflect.get(target, key)
+        if (key === segments || key === options) return Reflect.get(target, key)
 
         if (typeof key === 'symbol') {
           throw new Error(`Unknown symbol key: ${String(key)}`)
