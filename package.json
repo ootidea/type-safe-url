@@ -2,6 +2,17 @@
   "name": "type-safe-url",
   "version": "0.1.0",
   "description": "A lightweight TypeScript library for writing URLs in a type-safe manner.",
+  "keywords": [
+    "url",
+    "type-safety",
+    "query-parameter",
+    "path-parameter",
+    "query-string",
+    "api-schema",
+    "Proxy",
+    "uri",
+    "type-safe"
+  ],
   "homepage": "https://github.com/ootidea/type-safe-url#readme",
   "bugs": {
     "url": "https://github.com/ootidea/type-safe-url/issues"
