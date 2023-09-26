@@ -1,14 +1,15 @@
+<span />
 <h1 align="center">type-safe-url</h1>
 
 A lightweight TypeScript library for writing URLs in a type-safe manner.  
 
-## Features
+### Features
 - Supports path parameters, query parameters, and even fragments (hash)
 - Automatic URL encoding
 - Tiny bundle size (of course, 0 dependencies)
 - Works on both browsers and Node.js
 
-## Basic example
+### Basic example
 
 Here is an example of defining a schema and writing URLs.  
 
@@ -37,7 +38,7 @@ console.log(
 )
 ```
 
-## Setting the base URL
+### Setting the base URL
 
 You can set the **base URL** by providing options to the `createRootPath` function.  
 
