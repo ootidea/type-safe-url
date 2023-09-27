@@ -9,6 +9,8 @@ A lightweight TypeScript library for writing URLs in a type-safe manner.
 - Tiny bundle size (of course, 0 dependencies)
 - Works on both browsers and Node.js
 
+Furthermore, in editors like VS Code and WebStorm, you can list references to each URL part and rename them 👍.  
+
 ### Basic example
 
 Here is an example of defining a schema and writing URLs.  
