@@ -54,3 +54,20 @@ console.log(
   urlOf(rootPath.about), // 'https://example.com/about'
 )
 ```
+
+### Options for trailing and leading slashes
+
+You can also set options for trailing and leading slashes.
+
+```ts
+const rootPath = createRootPath<{
+  about: {
+    [queryParams]: { tab?: string }
+  }
+}>({ addLeadingSlash: false, addTrailingSlash: true })
+
+console.log(
+  urlOf(rootPath.about),                     // 'about/'
+  urlOf(rootPath.about, { tab: 'profile' }), // 'about/?tab=profile'
+)
+```

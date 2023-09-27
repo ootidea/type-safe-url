@@ -2,14 +2,13 @@ import { expect, test } from 'vitest'
 import { createRootPath, queryParams, urlOf } from './index'
 
 test('Path without parameters', () => {
-  type PathSchema = {
+  const rootPath = createRootPath<{
     contact: {}
     about: {
       history: {}
       people: {}
     }
-  }
-  const rootPath = createRootPath<PathSchema>()
+  }>()
 
   expect(urlOf(rootPath)).toBe('/')
   expect(urlOf(rootPath.contact)).toBe('/contact')
@@ -18,15 +17,14 @@ test('Path without parameters', () => {
 })
 
 test('Path parameters', () => {
-  type PathSchema = {
+  const rootPath = createRootPath<{
     article: {
       [id: number]: {}
     }
     user: {
       [name: string]: { posts: {} }
     }
-  }
-  const rootPath = createRootPath<PathSchema>()
+  }>()
 
   expect(urlOf(rootPath.article)).toBe('/article')
   expect(urlOf(rootPath.article(123))).toBe('/article/123')
@@ -35,13 +33,12 @@ test('Path parameters', () => {
 })
 
 test('Query parameters', () => {
-  type PathSchema = {
+  const rootPath = createRootPath<{
     login: { [queryParams]: { redirectUrl: string } }
     blog: {
       [queryParams]: { order?: 'asc' | 'desc'; page?: number }
     }
-  }
-  const rootPath = createRootPath<PathSchema>()
+  }>()
 
   expect(urlOf(rootPath.login, { redirectUrl: 'https://example.com' })).toBe(
     '/login?redirectUrl=https%3A%2F%2Fexample.com',
@@ -52,16 +49,29 @@ test('Query parameters', () => {
   expect(urlOf(rootPath.blog, { page: 2, order: 'asc' })).toBe('/blog?page=2&order=asc')
 })
 
-test('baseUrl', () => {
-  type PathSchema = {
+test('baseUrl option', () => {
+  const rootPath = createRootPath<{
     contact: {}
-    about: {
-      history: {}
-      people: {}
-    }
-  }
-  const rootPath = createRootPath<PathSchema>({ baseUrl: 'https://example.com' })
+  }>({ baseUrl: 'https://example.com' })
 
   expect(urlOf(rootPath)).toBe('https://example.com/')
   expect(urlOf(rootPath.contact)).toBe('https://example.com/contact')
+})
+
+test('addLeadingSlash option', () => {
+  const rootPath = createRootPath<{
+    contact: {}
+  }>({ addLeadingSlash: false })
+
+  expect(urlOf(rootPath)).toBe('')
+  expect(urlOf(rootPath.contact)).toBe('contact')
+})
+
+test('addTrailingSlash option', () => {
+  const rootPath = createRootPath<{
+    contact: {}
+  }>({ addTrailingSlash: true })
+
+  expect(urlOf(rootPath)).toBe('/')
+  expect(urlOf(rootPath.contact)).toBe('/contact/')
 })

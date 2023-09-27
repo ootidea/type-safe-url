@@ -16,7 +16,12 @@ const segments = Symbol('segments')
 const options = Symbol('options')
 
 export type Options = {
+  /** default: '' */
   baseUrl?: string
+  /** default: true */
+  addLeadingSlash?: boolean
+  /** default: false */
+  addTrailingSlash?: boolean
 }
 
 /**
@@ -85,8 +90,17 @@ export function urlOf<T extends { [segments]: string[]; [options]: Options; [que
   path: T,
   givenQueryParams?: T[typeof queryParams],
 ): string {
-  const baseUrl = path[options]?.baseUrl ?? ''
-  const pathString = path[segments].map(encodeURI).join('/')
+  const baseUrl = path[options].baseUrl ?? ''
+  const pathString = (() => {
+    const leadingSlash = path[options].addLeadingSlash ?? true ? '/' : ''
+    const trailingSlash = path[options].addTrailingSlash ?? false ? '/' : ''
+    const result = `${leadingSlash}${path[segments].map(encodeURI).join('/')}${trailingSlash}`
+    if (result === '//') {
+      return '/'
+    } else {
+      return result
+    }
+  })()
 
   const searchParams = new URLSearchParams()
   for (const [key, value] of Object.entries(givenQueryParams ?? {})) {
@@ -102,7 +116,7 @@ export function urlOf<T extends { [segments]: string[]; [options]: Options; [que
   const queryString = searchParams.toString()
   if (queryString === '') {
     // Generate '/user' instead of '/user?' for example'.
-    return `${baseUrl}/${pathString}`
+    return `${baseUrl}${pathString}`
   }
-  return `${baseUrl}/${pathString}?${queryString}`
+  return `${baseUrl}${pathString}?${queryString}`
 }
