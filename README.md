@@ -57,7 +57,7 @@ console.log(
 
 ### Options for trailing and leading slashes
 
-You can also set options for trailing and leading slashes.
+There are options to toggle whether to add a slash to the path.  
 
 ```ts
 const rootPath = createRootPath<{

@@ -77,7 +77,19 @@ function createPath(currentSegments: string[], givenOptions: Options): any {
 }
 
 /**
- * TODO: Comment
+ * Create a URL string.
+ * @example
+ * const rootPath = createRootPath<{
+ *   contact: {}
+ * }>()
+ * const url = urlOf(rootPath.contact)
+ * @example with query parameters
+ * const rootPath = createRootPath<{
+ *   blog: {
+ *     [queryParams]: { page?: number }
+ *   }
+ * }>()
+ * const url = urlOf(rootPath.blog, { page: 2 })
  */
 export function urlOf<T extends { [segments]: string[]; [options]: Options; [queryParams]: Record<string, unknown> }>(
   // Make empty query parameters {} optional
