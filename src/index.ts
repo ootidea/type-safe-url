@@ -92,10 +92,11 @@ function createPath(currentSegments: string[], givenOptions: Options): any {
  * const url = urlOf(rootPath.blog, { page: 2 })
  */
 export function urlOf<T extends { [segments]: string[]; [options]: Options; [queryParams]: Record<string, unknown> }>(
+  path: T,
   // Make empty query parameters {} optional
-  ...args: Partial<T[typeof queryParams]> extends T[typeof queryParams]
-    ? [path: T, givenQueryParams?: T[typeof queryParams]]
-    : [path: T, givenQueryParams: T[typeof queryParams]]
+  ...optional: Partial<T[typeof queryParams]> extends T[typeof queryParams]
+    ? [givenQueryParams?: T[typeof queryParams]]
+    : [givenQueryParams: T[typeof queryParams]]
 ): string
 export function urlOf<T extends { [segments]: string[]; [options]: Options; [queryParams]?: never }>(path: T): string
 export function urlOf<T extends { [segments]: string[]; [options]: Options; [queryParams]: Record<string, unknown> }>(
