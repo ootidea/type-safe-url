@@ -34,12 +34,13 @@ test('Path parameters', () => {
 
 test('Query parameters', () => {
   const rootPath = createRootPath<{
-    login: { [queryParams]: { redirectUrl: string } }
+    login: { [queryParams]?: { redirectUrl: string } }
     blog: {
       [queryParams]: { order?: 'asc' | 'desc'; page?: number }
     }
   }>()
 
+  expect(urlOf(rootPath.login)).toBe('/login')
   expect(urlOf(rootPath.login, { redirectUrl: 'https://example.com' })).toBe(
     '/login?redirectUrl=https%3A%2F%2Fexample.com',
   )
