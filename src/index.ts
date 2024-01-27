@@ -15,6 +15,7 @@ export const queryParams = Symbol('queryParams')
 const segments = Symbol('segments')
 const options = Symbol('options')
 
+/** Options for creating URL strings. */
 export type Options = {
   /** default: '' */
   baseUrl?: string
@@ -78,18 +79,20 @@ function createPath(currentSegments: string[], givenOptions: Options): any {
 
 /**
  * Create a URL string.
- * @example
+ * @example Nested path
  * const rootPath = createRootPath<{
- *   contact: {}
+ *   setting: {
+ *     account: {}
+ *   }
  * }>()
- * const url = urlOf(rootPath.contact)
- * @example with query parameters
+ * const url = urlOf(rootPath.setting.account) // '/setting/account'
+ * @example Query parameters
  * const rootPath = createRootPath<{
  *   blog: {
  *     [queryParams]: { page?: number }
  *   }
  * }>()
- * const url = urlOf(rootPath.blog, { page: 2 })
+ * const url = urlOf(rootPath.blog, { page: 2 }) // '/blog?page=2'
  */
 export function urlOf<T extends { [segments]: string[]; [options]: Options; [queryParams]?: never }>(path: T): string
 export function urlOf<T extends { [segments]: string[]; [options]: Options; [queryParams]: Record<string, unknown> }>(
