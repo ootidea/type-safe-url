@@ -20,14 +20,16 @@ import { createRootPath, urlOf, queryParams } from "type-safe-url";
 
 // Define a schema
 const rootPath = createRootPath<{
-  // Nested path
-  setting: { account: {} }
+  setting: {
+    // Nested path: '/setting/account'
+    account: {}
+  }
   users: {
-    // Path parameter
+    // Path parameter: '/users/xe64r1'
     [id: string]: {}
   }
   blog: {
-    // Query parameter
+    // Query parameter: '/blog?category=frontend'
     [queryParams]: { category?: 'frontend' | 'backend' }
   }
 }>()
@@ -35,7 +37,7 @@ const rootPath = createRootPath<{
 // Create URL strings
 console.log(
   urlOf(rootPath.setting.account),                // '/setting/account'
-  urlOf(rootPath.users('alice')),                 // '/users/alice'
+  urlOf(rootPath.users('xe64r1')),                // '/users/xe64r1'
   urlOf(rootPath.users),                          // '/users'
   urlOf(rootPath.blog, { category: 'frontend' }), // '/blog?category=frontend'
 )
