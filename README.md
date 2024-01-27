@@ -9,7 +9,7 @@ A lightweight TypeScript library for writing URLs in a type-safe manner.
 - Works on both browsers and Node.js
 - Tiny bundle size and 0 dependencies
 
-Furthermore, in editors like VS Code and WebStorm, you can list references to each URL part and rename them 👍.  
+With an IDE, you can list URL references and rename URL components 👍.  
 
 ### Basic example
 
@@ -21,15 +21,15 @@ import { createRootPath, urlOf, queryParams } from "type-safe-url";
 // Define a schema
 const rootPath = createRootPath<{
   setting: {
-    // Nested path: '/setting/account'
+    // Nested path example: '/setting/account'
     account: {}
   }
   users: {
-    // Path parameter: '/users/xe64r1'
+    // Path parameter example: '/users/xe64r1'
     [id: string]: {}
   }
   blog: {
-    // Query parameter: '/blog?category=frontend'
+    // Query parameter example: '/blog?category=frontend'
     [queryParams]: { category?: 'frontend' | 'backend' }
   }
 }>()
@@ -37,15 +37,15 @@ const rootPath = createRootPath<{
 // Create URL strings
 console.log(
   urlOf(rootPath.setting.account),                // '/setting/account'
-  urlOf(rootPath.users('xe64r1')),                // '/users/xe64r1'
   urlOf(rootPath.users),                          // '/users'
+  urlOf(rootPath.users('xe64r1')),                // '/users/xe64r1'
   urlOf(rootPath.blog, { category: 'frontend' }), // '/blog?category=frontend'
 )
 ```
 
 ### Setting the base URL
 
-You can set the **base URL** by providing options to the `createRootPath` function.  
+You can set the **base URL** as an option of the `createRootPath` function.  
 
 ```ts
 const rootPath = createRootPath<{
