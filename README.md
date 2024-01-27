@@ -1,13 +1,13 @@
-<span />
 <h1 align="center">type-safe-url</h1>
 
 A lightweight TypeScript library for writing URLs in a type-safe manner.  
 
 ### Features
-- Supports path parameters, query parameters, and even fragments (hash)
+- Can create schema-based type-safe URLs
+- Supports path parameters and query parameters
 - Automatic URL encoding
-- Tiny bundle size (of course, 0 dependencies)
 - Works on both browsers and Node.js
+- Tiny bundle size and 0 dependencies
 
 Furthermore, in editors like VS Code and WebStorm, you can list references to each URL part and rename them 👍.  
 
@@ -20,13 +20,14 @@ import { createRootPath, urlOf, queryParams } from "type-safe-url";
 
 // Define a schema
 const rootPath = createRootPath<{
+  // Nested path
   setting: { account: {} }
   users: {
-    // Path parameters
+    // Path parameter
     [id: string]: {}
   }
   blog: {
-    // Query parameters
+    // Query parameter
     [queryParams]: { category?: 'frontend' | 'backend' }
   }
 }>()
