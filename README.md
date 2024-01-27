@@ -3,7 +3,6 @@
 A lightweight TypeScript library for writing URLs in a type-safe manner.  
 
 ### Features
-- Can create schema-based type-safe URLs
 - Supports path parameters and query parameters
 - Automatic URL encoding
 - Works on both browsers and Node.js
@@ -13,12 +12,12 @@ With an IDE, you can list URL references and rename URL components 👍.
 
 ### Basic example
 
-Here is an example of defining a schema and writing URLs.  
+Here is an example of how to define a URL structure and write corresponding URLs.  
 
 ```ts
 import { createRootPath, urlOf, queryParams } from "type-safe-url";
 
-// Define a schema
+// Define URL structure
 const rootPath = createRootPath<{
   setting: {
     // Nested path example: '/setting/account'
