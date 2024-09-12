@@ -1,7 +1,7 @@
-import { expect, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import { createRootPath, queryParams, urlOf } from './index'
 
-test('Path without parameters', () => {
+test('Nested paths', () => {
   const rootPath = createRootPath<{
     contact: {}
     about: {
@@ -32,22 +32,41 @@ test('Path parameters', () => {
   expect(urlOf(rootPath.user('alice').posts)).toBe('/user/alice/posts')
 })
 
-test('Query parameters', () => {
-  const rootPath = createRootPath<{
-    login: { [queryParams]?: { redirectUrl: string } }
-    blog: {
-      [queryParams]: { order?: 'asc' | 'desc'; page?: number }
-    }
-  }>()
+describe('Query parameters', () => {
+  test('URL encoding', () => {
+    const rootPath = createRootPath<{
+      login: { [queryParams]?: { redirectUrl: string } }
+    }>()
 
-  expect(urlOf(rootPath.login)).toBe('/login')
-  expect(urlOf(rootPath.login, { redirectUrl: 'https://example.com' })).toBe(
-    '/login?redirectUrl=https%3A%2F%2Fexample.com',
-  )
-  expect(urlOf(rootPath.blog)).toBe('/blog')
-  expect(urlOf(rootPath.blog, { order: 'asc' })).toBe('/blog?order=asc')
-  expect(urlOf(rootPath.blog, { order: 'asc', page: 2 })).toBe('/blog?order=asc&page=2')
-  expect(urlOf(rootPath.blog, { page: 2, order: 'asc' })).toBe('/blog?page=2&order=asc')
+    expect(urlOf(rootPath.login)).toBe('/login')
+    expect(urlOf(rootPath.login, { redirectUrl: 'https://example.com' })).toBe(
+      '/login?redirectUrl=https%3A%2F%2Fexample.com',
+    )
+  })
+
+  test('Multiple query parameters', () => {
+    const rootPath = createRootPath<{
+      blog: {
+        [queryParams]: { order?: 'asc' | 'desc'; page?: number }
+      }
+    }>()
+
+    expect(urlOf(rootPath.blog)).toBe('/blog')
+    expect(urlOf(rootPath.blog, { order: 'asc' })).toBe('/blog?order=asc')
+    expect(urlOf(rootPath.blog, { order: 'asc', page: 2 })).toBe('/blog?order=asc&page=2')
+    expect(urlOf(rootPath.blog, { page: 2, order: 'asc' })).toBe('/blog?page=2&order=asc')
+  })
+
+  test('Duplicate query parameters', () => {
+    const rootPath = createRootPath<{
+      items: {
+        [queryParams]: { selected: number[] }
+      }
+    }>()
+
+    expect(urlOf(rootPath.items, { selected: [1, 2] })).toBe('/items?selected=1&selected=2')
+    expect(urlOf(rootPath.items, { selected: [] })).toBe('/items')
+  })
 })
 
 test('baseUrl option', () => {
