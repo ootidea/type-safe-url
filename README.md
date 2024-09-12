@@ -24,7 +24,7 @@ const rootPath = createRootPath<{
     account: {}
   }
   users: {
-    // Path parameter example: '/users/xe64r1'
+    // Path parameter example: '/users/ootidea'
     [id: string]: {}
   }
   blog: {
@@ -37,7 +37,7 @@ const rootPath = createRootPath<{
 console.log(
   urlOf(rootPath.setting.account),                // '/setting/account'
   urlOf(rootPath.users),                          // '/users'
-  urlOf(rootPath.users('xe64r1')),                // '/users/xe64r1'
+  urlOf(rootPath.users('ootidea')),               // '/users/ootidea'
   urlOf(rootPath.blog, { category: 'frontend' }), // '/blog?category=frontend'
 )
 ```
