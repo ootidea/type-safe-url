@@ -15,7 +15,7 @@ With an IDE, you can list URL references and rename URL components 👍.
 Here is an example of how to define a URL structure and write corresponding URLs.  
 
 ```ts
-import { createRootPath, urlOf, queryParams } from "type-safe-url"
+import { createRootPath, urlOf, queryParams } from 'type-safe-url'
 
 // Define URL structure
 const rootPath = createRootPath<{
@@ -80,7 +80,7 @@ You can define query parameters that accept multiple values.
 Simply use **array types** as below.  
 
 ```ts
-import { createRootPath, urlOf, queryParams } from "type-safe-url"
+import { createRootPath, urlOf, queryParams } from 'type-safe-url'
 
 const rootPath = createRootPath<{
   articles: {
@@ -89,6 +89,6 @@ const rootPath = createRootPath<{
 }>()
 
 console.log(
-  urlOf(rootPath.articles, { tags: ['css', 'a11y'] }), // '/articles?tags=css&tags=a11y'
+  urlOf(rootPath.articles, { tags: ['CSS', 'iOS'] }), // '/articles?tags=CSS&tags=iOS'
 )
 ```
