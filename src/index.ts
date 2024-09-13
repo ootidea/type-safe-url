@@ -1,4 +1,4 @@
-import { MergeIntersection } from './utility'
+import type { MergeIntersection } from './utility'
 
 /**
  * Symbol for specifying query parameter types in schema.
@@ -47,13 +47,16 @@ export function createRootPath<PathSchema>(options: Options = {}): Path<PathSche
   return createPath([], options)
 }
 type Path<PathSchema> = string | number extends keyof PathSchema
-  ? Path_<PathSchema> & { (pathParam: string | number): Path<PathSchema[string | number]> }
+  ? Path_<PathSchema> & ((pathParam: string | number) => Path<PathSchema[string | number]>)
   : number extends keyof PathSchema
-  ? Path_<PathSchema> & { (pathParam: number): Path<PathSchema[number]> }
-  : Path_<PathSchema>
+    ? Path_<PathSchema> & ((pathParam: number) => Path<PathSchema[number]>)
+    : Path_<PathSchema>
 type Path_<T> = T extends object
   ? MergeIntersection<
-      { [K in keyof T]: K extends string ? Path<T[K]> : T[K] } & { [segments]: string[]; [options]: Options }
+      { [K in keyof T]: K extends string ? Path<T[K]> : T[K] } & {
+        [segments]: string[]
+        [options]: Options
+      }
     >
   : T
 
@@ -95,25 +98,37 @@ function createPath(currentSegments: string[], givenOptions: Options): any {
  * const url = urlOf(rootPath.blog, { page: 2 }) // '/blog?page=2'
  */
 export function urlOf<T extends { [segments]: string[]; [options]: Options; [queryParams]?: never }>(path: T): string
-export function urlOf<T extends { [segments]: string[]; [options]: Options; [queryParams]: Record<string, unknown> }>(
+export function urlOf<
+  T extends {
+    [segments]: string[]
+    [options]: Options
+    [queryParams]: Record<string, unknown>
+  },
+>(
   path: T,
   // Make empty query parameters {} optional
   ...optional: Partial<T[typeof queryParams]> extends T[typeof queryParams]
     ? [givenQueryParams?: T[typeof queryParams]]
     : [givenQueryParams: T[typeof queryParams]]
 ): string
-export function urlOf<T extends { [segments]: string[]; [options]: Options; [queryParams]?: Record<string, unknown> }>(
-  path: T,
-  givenQueryParams?: NonNullable<T[typeof queryParams]>,
-): string
-export function urlOf<T extends { [segments]: string[]; [options]: Options; [queryParams]?: Record<string, unknown> }>(
-  path: T,
-  givenQueryParams?: T[typeof queryParams],
-): string {
+export function urlOf<
+  T extends {
+    [segments]: string[]
+    [options]: Options
+    [queryParams]?: Record<string, unknown>
+  },
+>(path: T, givenQueryParams?: NonNullable<T[typeof queryParams]>): string
+export function urlOf<
+  T extends {
+    [segments]: string[]
+    [options]: Options
+    [queryParams]?: Record<string, unknown>
+  },
+>(path: T, givenQueryParams?: T[typeof queryParams]): string {
   const baseUrl = path[options].baseUrl ?? ''
   const pathString = (() => {
-    const leadingSlash = path[options].addLeadingSlash ?? true ? '/' : ''
-    const trailingSlash = path[options].addTrailingSlash ?? false ? '/' : ''
+    const leadingSlash = (path[options].addLeadingSlash ?? true) ? '/' : ''
+    const trailingSlash = (path[options].addTrailingSlash ?? false) ? '/' : ''
     const result = `${leadingSlash}${path[segments].map(encodeURI).join('/')}${trailingSlash}`
     if (result === '//') {
       return '/'
