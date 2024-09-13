@@ -132,14 +132,13 @@ export function urlOf<
     const result = `${leadingSlash}${path[segments].map(encodeURI).join('/')}${trailingSlash}`
     if (result === '//') {
       return '/'
-    } else {
-      return result
     }
+    return result
   })()
 
   const searchParams = new URLSearchParams()
   for (const [key, value] of Object.entries(givenQueryParams ?? {})) {
-    if (value instanceof Array) {
+    if (Array.isArray(value)) {
       for (const item of value) {
         searchParams.append(key, String(item))
       }

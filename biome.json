@@ -12,5 +12,11 @@
       "semicolons": "asNeeded",
       "quoteStyle": "single"
     }
+  },
+  "linter": {
+    "rules": {
+      "suspicious": { "noExplicitAny": "off" },
+      "complexity": { "noBannedTypes": "off" }
+    }
   }
 }
