@@ -42,13 +42,15 @@
     "check:test": "vitest --run --silent=false",
     "check:type": "tsc --noEmit",
     "check:biome": "biome check",
-    "check-watch": "vitest --silent=false",
+    "test-watch": "vitest --silent=false",
+    "test-coverage": "vitest run --coverage --coverage.all",
     "postversion": "git push && git push --tags && npm publish ./",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.0",
     "@tsconfig/strictest": "^2.0.5",
+    "@vitest/coverage-v8": "^2.1.0",
     "lefthook": "^1.7.15",
     "npm-run-all2": "^6.2.2",
     "tsup": "^8.2.4",
