@@ -44,8 +44,8 @@
     "check:biome": "biome check",
     "test-watch": "vitest --silent=false",
     "test-coverage": "vitest run --coverage --coverage.all",
-    "postversion": "git push && git push --tags && npm publish ./",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "pnpm check && pnpm build",
+    "postversion": "npm publish ./ && git push --follow-tags"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.0",
