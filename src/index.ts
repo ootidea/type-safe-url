@@ -3,11 +3,11 @@ import type { MakeOptionalPropertiesAcceptUndefined, MergeIntersection } from 'a
 /** Options for creating URL strings. */
 export type UrlBuilderOptions = {
   /** default value: '' */
-  baseUrl?: string
+  baseUrl?: string | undefined
   /** default value: true */
-  autoAddLeadingSlash?: boolean
+  autoAddLeadingSlash?: boolean | undefined
   /** default value: false */
-  autoAddTrailingSlash?: boolean
+  autoAddTrailingSlash?: boolean | undefined
 }
 
 // The symbol used to encapsulate path segments within a PathObject
