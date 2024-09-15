@@ -5,14 +5,14 @@ test('Nested URL structure', () => {
   const root = createRootPathObject<{
     introduction: {}
     components: {
-      button: {}
+      Button: {}
     }
   }>()
 
   expect(urlOf(root)).toBe('/')
   expect(urlOf(root.introduction)).toBe('/introduction')
   expect(urlOf(root.components)).toBe('/components')
-  expect(urlOf(root.components.button)).toBe('/components/button')
+  expect(urlOf(root.components.Button)).toBe('/components/Button')
 })
 
 test('Path parameters', () => {
