@@ -1,4 +1,4 @@
-import type { MergeIntersection } from 'advanced-type-utilities'
+import type { MakeOptionalPropertiesAcceptUndefined, MergeIntersection } from 'advanced-type-utilities'
 
 /** Options for creating URL strings. */
 export type UrlBuilderOptions = {
@@ -53,7 +53,7 @@ type PathObject<UrlSchema> = UrlSchema extends (pathParam: infer PathParam) => i
 
 export function urlOf<
   T extends { [PATH_SEGMENTS_KEY]: string[]; [OPTIONS_KEY]: UrlBuilderOptions; [QUERY_PARAMS_KEY]: object },
->(pathObject: T, queryParams?: Partial<T[typeof QUERY_PARAMS_KEY]>): string
+>(pathObject: T, queryParams?: MakeOptionalPropertiesAcceptUndefined<Partial<T[typeof QUERY_PARAMS_KEY]>>): string
 export function urlOf<T extends { [PATH_SEGMENTS_KEY]: string[]; [OPTIONS_KEY]: UrlBuilderOptions }>(
   pathObject: T,
 ): string
@@ -71,6 +71,8 @@ export function urlOf<
 
   const searchParams = new URLSearchParams()
   for (const [key, value] of Object.entries(queryParams ?? {})) {
+    if (value === undefined || value === null) continue
+
     if (Array.isArray(value)) {
       for (const item of value) {
         searchParams.append(key, String(item))

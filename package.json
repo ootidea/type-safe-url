@@ -55,7 +55,7 @@
     "@biomejs/biome": "^1.9.0",
     "@tsconfig/strictest": "^2.0.5",
     "@vitest/coverage-v8": "^2.1.0",
-    "advanced-type-utilities": "^0.2.0",
+    "advanced-type-utilities": "^0.3.0",
     "npm-run-all2": "^6.2.2",
     "sort-package-json": "^2.10.1",
     "tsup": "^8.2.4",
