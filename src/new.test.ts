@@ -17,12 +17,8 @@ test('Nested URL structure', () => {
 
 test('Path parameters', () => {
   const rootPath = createRootPathObject<{
-    user: {
-      [name: string]: {
-        posts: {
-          [ID: number]: {}
-        }
-      }
+    user: (name: string) => {
+      posts: (ID: number) => {}
     }
   }>()
 

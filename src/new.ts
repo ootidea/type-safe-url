@@ -15,18 +15,6 @@ const PATH_SEGMENTS_KEY = Symbol('PATH_SEGMENTS_KEY')
 // The symbol used to encapsulate a UrlBuilderOptions object within a PathObject
 const OPTIONS_KEY = Symbol('OPTIONS_KEY')
 
-/**
- * @example
- * const rootPathObject = createRootPathObject<{
- *   user: {
- *     [name: string]: {
- *       posts: {
- *         [id: number]: {}
- *       }
- *     }
- *   }
- * }>()
- */
 export function createRootPathObject<UrlSchema>(options: UrlBuilderOptions = {}): PathObject<UrlSchema> {
   return createPathObject<UrlSchema>([], options)
 }
@@ -46,13 +34,10 @@ function createPathObject<UrlSchema>(pathSegments: string[], options: UrlBuilder
   ) as any
 }
 type Internal = { [PATH_SEGMENTS_KEY]: string[]; [OPTIONS_KEY]: UrlBuilderOptions }
-type PathObject<UrlSchema> = string | number extends keyof UrlSchema
-  ? // The only remaining type would be symbols. Since symbols cannot be converted to a string, they are ignored.
-    Internal & ((pathParam: string | number) => PathObject<UrlSchema[string | number]>)
-  : number extends keyof UrlSchema
-    ? MergeIntersection<Internal & { [K in Exclude<keyof UrlSchema, number | symbol>]: PathObject<UrlSchema[K]> }> &
-        ((pathParam: number) => PathObject<UrlSchema[number]>)
-    : MergeIntersection<Internal & { [K in Exclude<keyof UrlSchema, symbol>]: PathObject<UrlSchema[K]> }>
+type PathObject<UrlSchema> = UrlSchema extends (pathParam: infer PathParam) => infer NestedUrlSchema
+  ? MergeIntersection<Internal & { [K in Exclude<keyof UrlSchema, symbol>]: PathObject<UrlSchema[K]> }> &
+      ((pathParam: PathParam) => PathObject<NestedUrlSchema>)
+  : MergeIntersection<Internal & { [K in Exclude<keyof UrlSchema, symbol>]: PathObject<UrlSchema[K]> }>
 
 export function urlOf<T extends { [PATH_SEGMENTS_KEY]: string[]; [OPTIONS_KEY]: UrlBuilderOptions }>(
   pathObject: T,
