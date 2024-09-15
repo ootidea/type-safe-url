@@ -15,10 +15,10 @@ With an IDE, you can list URL references and rename URL components 👍.
 Here is an example of how to define a URL structure and write corresponding URLs.  
 
 ```ts
-import { createRootPath, urlOf, queryParams } from 'type-safe-url'
+import { createRootPathObject, urlOf } from 'type-safe-url'
 
 // Define URL structure
-const rootPath = createRootPath<{
+const root = createRootPathObject<{
   setting: {
     // Nested path example: '/setting/account'
     account: {}
@@ -29,31 +29,31 @@ const rootPath = createRootPath<{
   }
   blog: {
     // Query parameter example: '/blog?category=frontend'
-    [queryParams]: { category?: 'frontend' | 'backend' }
+    '?': { category: 'frontend' | 'backend' }
   }
 }>()
 
 // Create URL strings
 console.log(
-  urlOf(rootPath.setting.account),                // '/setting/account'
-  urlOf(rootPath.users),                          // '/users'
-  urlOf(rootPath.users('ootidea')),               // '/users/ootidea'
-  urlOf(rootPath.blog, { category: 'frontend' }), // '/blog?category=frontend'
+  urlOf(root.setting.account),                // '/setting/account'
+  urlOf(root.users),                          // '/users'
+  urlOf(root.users('ootidea')),               // '/users/ootidea'
+  urlOf(root.blog, { category: 'frontend' }), // '/blog?category=frontend'
 )
 ```
 
 ### Setting the base URL
 
-You can set the **base URL** as an option of the `createRootPath` function.  
+You can set the **base URL** as an option of the `createRootPathObject` function.  
 
 ```ts
-const rootPath = createRootPath<{
+const root = createRootPathObject<{
   about: {}
 }>({ baseUrl: 'https://example.com' })
 
 console.log(
-  urlOf(rootPath),       // 'https://example.com/'
-  urlOf(rootPath.about), // 'https://example.com/about'
+  urlOf(root),       // 'https://example.com/'
+  urlOf(root.about), // 'https://example.com/about'
 )
 ```
 
@@ -62,15 +62,15 @@ console.log(
 There are options to toggle whether to add a slash to the path.  
 
 ```ts
-const rootPath = createRootPath<{
+const root = createRootPathObject<{
   about: {
-    [queryParams]: { tab?: string }
+    '?': { tab: string }
   }
-}>({ addLeadingSlash: false, addTrailingSlash: true })
+}>({ autoAddLeadingSlash: false, autoAddTrailingSlash: true })
 
 console.log(
-  urlOf(rootPath.about),                     // 'about/'
-  urlOf(rootPath.about, { tab: 'profile' }), // 'about/?tab=profile'
+  urlOf(root.about),                     // 'about/'
+  urlOf(root.about, { tab: 'profile' }), // 'about/?tab=profile'
 )
 ```
 
@@ -80,15 +80,13 @@ You can define query parameters that accept multiple values.
 Simply use **array types** as below.  
 
 ```ts
-import { createRootPath, urlOf, queryParams } from 'type-safe-url'
-
-const rootPath = createRootPath<{
+const root = createRootPathObject<{
   articles: {
-    [queryParams]: { tags?: string[] } // 👈️ Multi-value as an array
+    '?': { tags: string[] } // 👈️ Multi-value as an array
   }
 }>()
 
 console.log(
-  urlOf(rootPath.articles, { tags: ['CSS', 'iOS'] }), // '/articles?tags=CSS&tags=iOS'
+  urlOf(root.articles, { tags: ['css', 'html'] }), // '/articles?tags=css&tags=html'
 )
 ```

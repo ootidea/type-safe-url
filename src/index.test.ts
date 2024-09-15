@@ -1,97 +1,82 @@
 import { describe, expect, test } from 'vitest'
-import { createRootPath, queryParams, urlOf } from './index'
+import { createRootPathObject, urlOf } from './index'
 
-test('Nested paths', () => {
-  const rootPath = createRootPath<{
-    contact: {}
-    about: {
-      history: {}
-      people: {}
+test('Nested URL structure', () => {
+  const root = createRootPathObject<{
+    introduction: {}
+    components: {
+      button: {}
     }
   }>()
 
-  expect(urlOf(rootPath)).toBe('/')
-  expect(urlOf(rootPath.contact)).toBe('/contact')
-  expect(urlOf(rootPath.about)).toBe('/about')
-  expect(urlOf(rootPath.about.history)).toBe('/about/history')
+  expect(urlOf(root)).toBe('/')
+  expect(urlOf(root.introduction)).toBe('/introduction')
+  expect(urlOf(root.components)).toBe('/components')
+  expect(urlOf(root.components.button)).toBe('/components/button')
 })
 
 test('Path parameters', () => {
-  const rootPath = createRootPath<{
-    article: {
-      [id: number]: {}
-    }
-    user: {
-      [name: string]: { posts: {} }
+  const root = createRootPathObject<{
+    user: (name: string) => {
+      posts: (id: number) => {}
     }
   }>()
 
-  expect(urlOf(rootPath.article)).toBe('/article')
-  expect(urlOf(rootPath.article(123))).toBe('/article/123')
-  expect(urlOf(rootPath.user('alice'))).toBe('/user/alice')
-  expect(urlOf(rootPath.user('alice').posts)).toBe('/user/alice/posts')
+  expect(urlOf(root.user)).toBe('/user')
+  expect(urlOf(root.user('alice'))).toBe('/user/alice')
+  expect(urlOf(root.user('alice').posts)).toBe('/user/alice/posts')
+  expect(urlOf(root.user('alice').posts(1))).toBe('/user/alice/posts/1')
 })
 
-describe('Query parameters', () => {
-  test('URL encoding', () => {
-    const rootPath = createRootPath<{
-      login: { [queryParams]?: { redirectUrl: string } }
-    }>()
+test('Query parameters', () => {
+  const root = createRootPathObject<{
+    items: {
+      '?': { page: number; limit: number }
+    }
+  }>()
 
-    expect(urlOf(rootPath.login)).toBe('/login')
-    expect(urlOf(rootPath.login, { redirectUrl: 'https://example.com' })).toBe(
-      '/login?redirectUrl=https%3A%2F%2Fexample.com',
-    )
+  expect(urlOf(root.items)).toBe('/items')
+  expect(urlOf(root.items, { page: 2 })).toBe('/items?page=2')
+  expect(urlOf(root.items, { page: 2, limit: 30 })).toBe('/items?page=2&limit=30')
+  expect(urlOf(root.items, { limit: 30, page: 2 })).toBe('/items?limit=30&page=2')
+})
+
+test('Multi-value query parameters', () => {
+  const root = createRootPathObject<{
+    articles: {
+      '?': { tag: string[] }
+    }
+  }>()
+
+  expect(urlOf(root.articles, { tag: ['css', 'html'] })).toBe('/articles?tag=css&tag=html')
+  expect(urlOf(root.articles, { tag: [] })).toBe('/articles')
+})
+
+describe('Options', () => {
+  test('baseUrl option', () => {
+    const root = createRootPathObject<{
+      contact: {}
+    }>({ baseUrl: 'https://example.com' })
+
+    expect(urlOf(root)).toBe('https://example.com/')
+    expect(urlOf(root.contact)).toBe('https://example.com/contact')
   })
 
-  test('Multiple query parameters', () => {
-    const rootPath = createRootPath<{
-      blog: {
-        [queryParams]: { order?: 'asc' | 'desc'; page?: number }
-      }
-    }>()
+  test('addLeadingSlash option', () => {
+    const root = createRootPathObject<{
+      contact: {}
+    }>({ autoAddLeadingSlash: false })
 
-    expect(urlOf(rootPath.blog)).toBe('/blog')
-    expect(urlOf(rootPath.blog, { order: 'asc' })).toBe('/blog?order=asc')
-    expect(urlOf(rootPath.blog, { order: 'asc', page: 2 })).toBe('/blog?order=asc&page=2')
-    expect(urlOf(rootPath.blog, { page: 2, order: 'asc' })).toBe('/blog?page=2&order=asc')
+    expect(urlOf(root)).toBe('')
+    expect(urlOf(root.contact)).toBe('contact')
   })
 
-  test('Duplicate query parameters', () => {
-    const rootPath = createRootPath<{
-      items: {
-        [queryParams]: { selected: number[] }
-      }
-    }>()
+  test('addTrailingSlash option', () => {
+    const root = createRootPathObject<{
+      contact: {}
+    }>({ autoAddTrailingSlash: true })
 
-    expect(urlOf(rootPath.items, { selected: [1, 2] })).toBe('/items?selected=1&selected=2')
-    expect(urlOf(rootPath.items, { selected: [] })).toBe('/items')
+    expect(urlOf(root)).toBe('/')
+    expect(urlOf(root.contact)).toBe('/contact/')
   })
-})
-
-test('baseUrl option', () => {
-  const rootPath = createRootPath<{
-    contact: {}
-  }>({ baseUrl: 'https://example.com' })
-
-  expect(urlOf(rootPath)).toBe('https://example.com/')
-  expect(urlOf(rootPath.contact)).toBe('https://example.com/contact')
-})
-
-test('addLeadingSlash option', () => {
-  const rootPath = createRootPath<{
-    contact: {}
-  }>({ addLeadingSlash: false })
-
-  expect(urlOf(rootPath)).toBe('')
-  expect(urlOf(rootPath.contact)).toBe('contact')
-})
-
-test('addTrailingSlash option', () => {
-  const rootPath = createRootPath<{
-    contact: {}
-  }>({ addTrailingSlash: true })
-
-  expect(urlOf(rootPath)).toBe('/')
-  expect(urlOf(rootPath.contact)).toBe('/contact/')
 })
