@@ -27,3 +27,27 @@ test('Path parameters', () => {
   expect(urlOf(rootPath.user('alice').posts)).toBe('/user/alice/posts')
   expect(urlOf(rootPath.user('alice').posts(1))).toBe('/user/alice/posts/1')
 })
+
+test('Query parameters', () => {
+  const rootPath = createRootPathObject<{
+    items: {
+      '?': { page: number; limit: number }
+    }
+  }>()
+
+  expect(urlOf(rootPath.items)).toBe('/items')
+  expect(urlOf(rootPath.items, { page: 2 })).toBe('/items?page=2')
+  expect(urlOf(rootPath.items, { page: 2, limit: 30 })).toBe('/items?page=2&limit=30')
+  expect(urlOf(rootPath.items, { limit: 30, page: 2 })).toBe('/items?limit=30&page=2')
+})
+
+test('Multi-value query parameters', () => {
+  const rootPath = createRootPathObject<{
+    articles: {
+      '?': { tag: string[] }
+    }
+  }>()
+
+  expect(urlOf(rootPath.articles, { tag: ['css', 'html'] })).toBe('/articles?tag=css&tag=html')
+  expect(urlOf(rootPath.articles, { tag: [] })).toBe('/articles')
+})
