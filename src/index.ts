@@ -1,4 +1,4 @@
-import type { MergeIntersection } from './utility'
+import type { MergeIntersection } from 'advanced-type-utilities'
 
 /**
  * Symbol for specifying query parameter types in schema.

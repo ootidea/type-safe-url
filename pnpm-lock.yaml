@@ -17,6 +17,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^2.1.0
         version: 2.1.0(vitest@2.1.0(@types/node@22.5.4))
+      advanced-type-utilities:
+        specifier: ^0.2.0
+        version: 0.2.0
       npm-run-all2:
         specifier: ^6.2.2
         version: 6.2.2
@@ -563,6 +566,9 @@ packages:
 
   '@vitest/utils@2.1.0':
     resolution: {integrity: sha512-rreyfVe0PuNqJfKYUwfPDfi6rrp0VSu0Wgvp5WBqJonP+4NvXHk48X6oBam1Lj47Hy6jbJtnMj3OcRdrkTP0tA==}
+
+  advanced-type-utilities@0.2.0:
+    resolution: {integrity: sha512-9Zqke8OVnyKiR7k/HSHB/HbE0J3IVfPvQG6FVVM5VXcM91X8eEgeTg/tvaEn/WG/A/uvkHzCvwCxErWBLu2CpQ==}
 
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
@@ -1612,6 +1618,8 @@ snapshots:
       '@vitest/pretty-format': 2.1.0
       loupe: 3.1.1
       tinyrainbow: 1.2.0
+
+  advanced-type-utilities@0.2.0: {}
 
   ansi-regex@5.0.1: {}
 
