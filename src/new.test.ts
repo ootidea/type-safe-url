@@ -1,4 +1,4 @@
-import { expect, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import { createRootPathObject, urlOf } from './new'
 
 test('Nested URL structure', () => {
@@ -50,4 +50,33 @@ test('Multi-value query parameters', () => {
 
   expect(urlOf(rootPath.articles, { tag: ['css', 'html'] })).toBe('/articles?tag=css&tag=html')
   expect(urlOf(rootPath.articles, { tag: [] })).toBe('/articles')
+})
+
+describe('Options', () => {
+  test('baseUrl option', () => {
+    const rootPath = createRootPathObject<{
+      contact: {}
+    }>({ baseUrl: 'https://example.com' })
+
+    expect(urlOf(rootPath)).toBe('https://example.com/')
+    expect(urlOf(rootPath.contact)).toBe('https://example.com/contact')
+  })
+
+  test('addLeadingSlash option', () => {
+    const rootPath = createRootPathObject<{
+      contact: {}
+    }>({ autoAddLeadingSlash: false })
+
+    expect(urlOf(rootPath)).toBe('')
+    expect(urlOf(rootPath.contact)).toBe('contact')
+  })
+
+  test('addTrailingSlash option', () => {
+    const rootPath = createRootPathObject<{
+      contact: {}
+    }>({ autoAddTrailingSlash: true })
+
+    expect(urlOf(rootPath)).toBe('/')
+    expect(urlOf(rootPath.contact)).toBe('/contact/')
+  })
 })
