@@ -17,28 +17,56 @@ Here is an example of how to define a URL structure and write corresponding URLs
 ```ts
 import { createRootPathObject, urlOf } from 'type-safe-url'
 
-// Define URL structure
+// Define your URL structure
 const root = createRootPathObject<{
-  setting: {
-    // Nested path example: '/setting/account'
-    account: {}
-  }
-  users: {
-    // Path parameter example: '/users/ootidea'
-    [id: string]: {}
-  }
-  blog: {
-    // Query parameter example: '/blog?category=frontend'
-    '?': { category: 'frontend' | 'backend' }
+  company: {    // '/company'
+    access: {}  // '/company/access'
+    history: {} // '/company/history'
   }
 }>()
 
 // Create URL strings
 console.log(
-  urlOf(root.setting.account),                // '/setting/account'
-  urlOf(root.users),                          // '/users'
-  urlOf(root.users('ootidea')),               // '/users/ootidea'
-  urlOf(root.blog, { category: 'frontend' }), // '/blog?category=frontend'
+  urlOf(root),                // '/'
+  urlOf(root.company.access), // '/company/access'
+)
+```
+
+### Path parameters
+
+Path parameters are represented using **function types** as follows:  
+
+```ts
+const root = createRootPathObject<{
+  user: (name: string) => {   // 👈️ Path parameter
+    profile: {}
+    posts: (id: number) => {} // 👈️ Nested path parameter
+  }
+}>()
+
+console.log(
+  urlOf(root.user),                  // '/user'
+  urlOf(root.user('alice')),         // '/user/alice'
+  urlOf(root.user('alice').posts),   // '/user/alice/posts'
+  urlOf(root.user('alice').posts(1)) // '/user/alice/posts/1'
+)
+```
+
+### Query parameters
+
+Query parameters are represented as follows:  
+
+```ts
+const root = createRootPathObject<{
+  items: {
+    '?': { page: number; limit: number }
+  }
+}>()
+
+console.log(
+  urlOf(root.items),                         // '/items'
+  urlOf(root.items, { page: 2 }),            // '/items?page=2'
+  urlOf(root.items, { page: 2, limit: 30 }), // '/items?page=2&limit=30'
 )
 ```
 
