@@ -42,36 +42,20 @@ console.log(
 )
 ```
 
-### Setting the base URL
+### Options for creating URL strings
 
-You can set the **base URL** as an option of the `createRootPathObject` function.  
+You can configure the base URL and slashes at both ends.
 
 ```ts
 const root = createRootPathObject<{
   about: {}
-}>({ baseUrl: 'https://example.com' })
+}>({
+  baseUrl: 'https://example.com/',
+  autoAddLeadingSlash: false,
+  autoAddTrailingSlash: true,
+})
 
-console.log(
-  urlOf(root),       // 'https://example.com/'
-  urlOf(root.about), // 'https://example.com/about'
-)
-```
-
-### Options for trailing and leading slashes
-
-There are options to toggle whether to add a slash to the path.  
-
-```ts
-const root = createRootPathObject<{
-  about: {
-    '?': { tab: string }
-  }
-}>({ autoAddLeadingSlash: false, autoAddTrailingSlash: true })
-
-console.log(
-  urlOf(root.about),                     // 'about/'
-  urlOf(root.about, { tab: 'profile' }), // 'about/?tab=profile'
-)
+console.log(urlOf(root.about)) // 'https://example.com/about/'
 ```
 
 ### Multi-Value Query Parameters
