@@ -15,17 +15,32 @@ test('Nested URL structure', () => {
   expect(urlOf(root.components.Button)).toBe('/components/Button')
 })
 
-test('Path parameters', () => {
-  const root = createRootPathObject<{
-    user: (name: string) => {
-      posts: (id: number) => {}
-    }
-  }>()
+describe('Path parameters', () => {
+  test('Nested path parameters', () => {
+    const root = createRootPathObject<{
+      user: (name: string) => {
+        posts: (id: number) => {}
+      }
+    }>()
 
-  expect(urlOf(root.user)).toBe('/user')
-  expect(urlOf(root.user('alice'))).toBe('/user/alice')
-  expect(urlOf(root.user('alice').posts)).toBe('/user/alice/posts')
-  expect(urlOf(root.user('alice').posts(1))).toBe('/user/alice/posts/1')
+    expect(urlOf(root.user)).toBe('/user')
+    expect(urlOf(root.user('alice'))).toBe('/user/alice')
+    expect(urlOf(root.user('alice').posts)).toBe('/user/alice/posts')
+    expect(urlOf(root.user('alice').posts(1))).toBe('/user/alice/posts/1')
+  })
+
+  test('Using call signatures', () => {
+    const root = createRootPathObject<{
+      version: {
+        latest: {}
+        (version: `v${number}.${number}.${number}`): {}
+      }
+    }>()
+
+    expect(urlOf(root.version)).toBe('/version')
+    expect(urlOf(root.version.latest)).toBe('/version/latest')
+    expect(urlOf(root.version('v1.0.0'))).toBe('/version/v1.0.0')
+  })
 })
 
 test('Query parameters', () => {
