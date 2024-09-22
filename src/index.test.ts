@@ -56,6 +56,19 @@ test('Query parameters', () => {
   expect(urlOf(root.items, { limit: 30, page: 2 })).toBe('/items?limit=30&page=2')
 })
 
+test('Ignoring nullish query parameters', () => {
+  const root = createRootPathObject<{
+    articles: {
+      '?': { page: number; tag: (string | undefined)[] }
+    }
+  }>()
+
+  expect(urlOf(root.articles, { page: undefined })).toBe('/articles')
+  expect(urlOf(root.articles, { page: null as any })).toBe('/articles')
+  expect(urlOf(root.articles, { tag: [undefined, 'css'] })).toBe('/articles?tag=css')
+  expect(urlOf(root.articles, { tag: [null as any, 'css'] })).toBe('/articles?tag=css')
+})
+
 test('Multi-value query parameters', () => {
   const root = createRootPathObject<{
     articles: {

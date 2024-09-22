@@ -75,6 +75,8 @@ export function urlOf<
 
     if (Array.isArray(value)) {
       for (const item of value) {
+        if (item === undefined || item === null) continue
+
         searchParams.append(key, String(item))
       }
     } else {
