@@ -48,7 +48,7 @@
     "check:test": "vitest run --silent=false",
     "test-watch": "vitest --silent=false",
     "test-coverage": "vitest run --coverage --coverage.all",
-    "prepublishOnly": "pnpm check && pnpm build",
+    "preversion": "pnpm check && pnpm build",
     "postversion": "npm publish ./ && git push --follow-tags"
   },
   "devDependencies": {
